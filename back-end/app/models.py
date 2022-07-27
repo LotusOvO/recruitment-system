@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 apply = db.Table(
     'apply',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('position_id', db.Integer, db.ForeignKey('position.id')),
+    db.Column('position_id', db.Integer, db.ForeignKey('positions.id')),
     db.Column('status', db.Integer, default=0)
     # 0-待审  1-初审    2-一面	3-二面	4-入职	-1-流程终止
 )
@@ -24,7 +24,8 @@ class User(db.Model):
     user_family_info = db.relationship('Family', backref=db.backref('users', lazy='dynamic'))
 
     position = db.relationship('Position',
-                               scondary=apply,
+                               secondary=apply,
+
                                backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
@@ -66,6 +67,7 @@ class Education(db.Model):
     major = db.Column(db.String(32), nullable=False)
     begin_date = db.Column(db.String(16), nullable=False)
     end_date = db.Column(db.String(16), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return '<Education {}>'.format(self.id)
@@ -79,6 +81,7 @@ class Work(db.Model):
     begin_date = db.Column(db.String(16), nullable=False)
     end_date = db.Column(db.String(16), nullable=False)
     describe = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
         return '<Work {}>'.format(self.id)
@@ -91,3 +94,7 @@ class Family(db.Model):
     phone_number = db.Column(db.String(16), nullable=False)
     work = db.Column(db.String(32), nullable=False)
     relation = db.Column(db.String(16), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    def __repr__(self):
+        return '<Work {}>'.format(self.name)
