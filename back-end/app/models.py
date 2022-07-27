@@ -1,6 +1,8 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime, timedelta
+import jwt
+from flask import url_for, current_app
 
 apply = db.Table(
     'apply',
@@ -19,9 +21,9 @@ class User(db.Model):
     role = db.Column(db.Integer, default=0)
 
     user_info = db.relationship('UserBaseInfo', uselist=False)
-    user_edu_info = db.relationship('Education', backref=db.backref('users', lazy='dynamic'))
-    user_work_info = db.relationship('Work', backref=db.backref('users', lazy='dynamic'))
-    user_family_info = db.relationship('Family', backref=db.backref('users', lazy='dynamic'))
+    user_edu_info = db.relationship('Education', backref=db.backref('users'))
+    user_work_info = db.relationship('Work', backref=db.backref('users'))
+    user_family_info = db.relationship('Family', backref=db.backref('users'))
 
     position = db.relationship('Position',
                                secondary=apply,
@@ -30,6 +32,63 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.id)
+
+    def set_password(self, pw):
+        # 保存用户密码为HASH值
+        self.password = generate_password_hash(pw)
+
+    def check_password(self, pw):
+        # 验证用户密码
+        return check_password_hash(self.password, pw)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'email': self.email,
+            'role': self.role,
+            '_links': {
+                'self': url_for('api.get_user_base_info', id=self.id)
+            }
+        }
+        return data
+
+    def from_dict(self, data):
+        pass
+
+    def new_user(self, data):
+        if 'email' in data:
+            setattr(self, 'email', data['email'])
+        if 'password' in data:
+            self.set_password(data['password'])
+
+    def get_jwt(self, exp_in=3600):
+        # 发放jwt
+        now = datetime.utcnow()
+        payload = {
+            'user_id': self.id,
+            'user_name': self.user_info.name if self.user_info.name else self.email,
+            'exp': now + timedelta(seconds=exp_in),
+            'iat': now
+        }
+        return jwt.encode(
+            payload,
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_jwt(token):
+        try:
+            # 解码token验证是否有效，有效则返回对应用户
+            payload = jwt.decode(
+                token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256']
+            )
+        except (jwt.exceptions.ExpiredSignatureError,
+                jwt.exceptions.InvalidSignatureError,
+                jwt.exceptions.DecodeError) as e:
+            return None
+        return User.query.get(payload.get('user_id'))
 
 
 class UserBaseInfo(db.Model):
@@ -44,6 +103,24 @@ class UserBaseInfo(db.Model):
 
     def __repr__(self):
         return '<Base Info {}>'.format(self.name)
+
+    def to_dict(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'sex': self.sex,
+            'race': self.race,
+            'id_number': self.id_number,
+            'phone_number': self.phone_number,
+            'address': self.address
+        }
+
+        return data
+
+    def from_dict(self, data):
+        for field in ['name', 'sex', 'race', 'id_number', 'phone_number', 'address']:
+            if field in data:
+                setattr(self, field, data[field])
 
 
 class Position(db.Model):
