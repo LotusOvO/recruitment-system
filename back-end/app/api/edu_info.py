@@ -11,6 +11,8 @@ from .. import db
 @token_auth.login_required
 def get_edu_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     edu_info = user.user_edu_info
     return jsonify([info.to_dict() for info in edu_info])
 
@@ -19,6 +21,8 @@ def get_edu_info(id):
 @token_auth.login_required
 def update_edu_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     data = request.get_json()
     if not data:
         return bad_request('必须提供JSON数据')
@@ -49,6 +53,8 @@ def update_edu_info(id):
 @token_auth.login_required
 def create_edu_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     data = request.get_json()
     if not data:
         return bad_request('必须提供JSON数据')
@@ -74,6 +80,8 @@ def create_edu_info(id):
 @token_auth.login_required
 def delete_edu_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     data = request.get_json()
     if not data:
         return bad_request('必须提供JSON数据')

@@ -11,6 +11,8 @@ from .. import db
 @token_auth.login_required
 def get_user_base_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     if user.user_info:
         return jsonify(user.user_info.to_dict())
     else:
@@ -21,6 +23,8 @@ def get_user_base_info(id):
 @token_auth.login_required
 def update_user_base_info(id):
     user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
     data = request.get_json()
     if not data:
         return bad_request("必须提供JSON数据")
