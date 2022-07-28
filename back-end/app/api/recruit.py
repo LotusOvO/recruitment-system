@@ -3,7 +3,7 @@ from flask import request, jsonify, url_for, g, current_app
 from . import bp
 from .auth import token_auth
 from .errors import bad_request, error_response
-from ..models import User, Position, apply
+from ..models import User, Position, apply, UserBaseInfo
 from .. import db
 
 
@@ -67,7 +67,7 @@ def cancel_recruit(id):
 
 
 @bp.route('/recruit/advance', methods=['PUT'])
-@token_auth.login_required
+# @token_auth.login_required
 def apply_advance():
     # 验证是否为管理员
     # if not verify_admin():
@@ -85,6 +85,7 @@ def apply_advance():
         bad_request(message)
 
     user = User.query.get_or_404(data['user_id'])
+    user_info = UserBaseInfo.query.get_or_404(data['user_id'])
     position = Position.query.get_or_404(data['position_id'])
     result = position.to_dict(user=user)
     if result['status'] == -1:
@@ -94,7 +95,7 @@ def apply_advance():
 
     position.change_status(user=user, status=result['status']+1)
     response = {
-        'user': user.to_dict(detail=False),
+        'user': user_info.to_dict(detail=False),
         'position': position.to_dict(user=user)
     }
     return jsonify(response)
@@ -119,6 +120,7 @@ def apply_refuse():
         bad_request(message)
 
     user = User.query.get_or_404(data['user_id'])
+    user_info = UserBaseInfo.query.get_or_404(data['user_id'])
     position = Position.query.get_or_404(data['position_id'])
     result = position.to_dict(user=user)
     if result['status'] == -1:
@@ -128,8 +130,7 @@ def apply_refuse():
 
     position.change_status(user=user, status=-1)
     response = {
-        'user': user.to_dict(detail=False),
+        'user': user_info.to_dict(detail=False),
         'position': position.to_dict(user=user)
     }
     return jsonify(response)
-    pass
