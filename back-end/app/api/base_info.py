@@ -17,7 +17,7 @@ def get_user_base_info(id):
         return jsonify({'id': id})
 
 
-@bp.route('/base_info/<int:id>', methods=['POST'])
+@bp.route('/base_info/<int:id>', methods=['PUT'])
 @token_auth.login_required
 def update_user_base_info(id):
     user = User.query.get_or_404(id)
@@ -39,6 +39,7 @@ def update_user_base_info(id):
         user_info = UserBaseInfo()
         setattr(user_info, 'id', id)
         user_info.from_dict(data)
+        db.session.add(user_info)
 
     db.session.commit()
     return jsonify(user.user_info.to_dict())
