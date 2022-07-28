@@ -68,3 +68,29 @@ def create_edu_info(id):
 
     edu_info = user.user_edu_info
     return jsonify([info.to_dict() for info in edu_info])
+
+
+@bp.route('/edu_info/<int:id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_edu_info(id):
+    user = User.query.get_or_404(id)
+    data = request.get_json()
+    if not data:
+        return bad_request('必须提供JSON数据')
+
+    message = {}
+    if 'id' not in data:
+        message['id'] = '请提供id数据'
+
+    if message:
+        bad_request(message)
+
+    edu_info = user.user_edu_info
+    for info in edu_info:
+        if info.id == int(data['id']):
+            db.session.delete(info)
+            db.session.commit()
+            return jsonify([info.to_dict() for info in edu_info])
+
+    message['id'] = '请提供正确的id信息'
+    bad_request(message)

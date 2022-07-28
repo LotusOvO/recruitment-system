@@ -68,3 +68,29 @@ def create_fam_info(id):
 
     fam_info = user.user_fam_info
     return jsonify([info.to_dict() for info in fam_info])
+
+
+@bp.route('/fam_info/<int:id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_fam_info(id):
+    user = User.query.get_or_404(id)
+    data = request.get_json()
+    if not data:
+        return bad_request('必须提供JSON数据')
+
+    message = {}
+    if 'id' not in data:
+        message['id'] = '请提供id数据'
+
+    if message:
+        bad_request(message)
+
+    fam_info = user.user_fam_info
+    for info in fam_info:
+        if info.id == int(data['id']):
+            db.session.delete(info)
+            db.session.commit()
+            return jsonify([info.to_dict() for info in fam_info])
+
+    message['id'] = '请提供正确的id信息'
+    bad_request(message)
