@@ -90,6 +90,9 @@ class User(db.Model):
             return None
         return User.query.get(payload.get('user_id'))
 
+    def is_apply(self, position):
+        return self.position.count(position) > 0
+
 
 class UserBaseInfo(db.Model):
     __tablename__ = 'base_info'
@@ -104,16 +107,17 @@ class UserBaseInfo(db.Model):
     def __repr__(self):
         return '<Base Info {}>'.format(self.name)
 
-    def to_dict(self):
+    def to_dict(self, detail=True):
         data = {
             'id': self.id,
             'name': self.name,
             'sex': self.sex,
-            'race': self.race,
-            'id_number': self.id_number,
             'phone_number': self.phone_number,
-            'address': self.address
         }
+        if detail:
+            data['race'] = self.race
+            data['id_number'] = self.id_number
+            data['address'] = self.address
 
         return data
 
@@ -135,7 +139,7 @@ class Position(db.Model):
     def __repr__(self):
         return '<Position {}>'.format(self.name)
 
-    def to_dict(self, detail=False):
+    def to_dict(self, detail=False, user=None):
         data = {
             'id': self.id,
             'name': self.name,
@@ -146,6 +150,9 @@ class Position(db.Model):
             data['describe'] = self.describe
             data['requirement'] = self.requirement
 
+        if user:
+            data['status'] = db.session.query(apply).filter_by(user_id=user.id, position_id=self.id).one().status
+
         return data
 
     def from_dict(self, data):
@@ -153,6 +160,10 @@ class Position(db.Model):
             if field in data:
                 setattr(self, field, data[field])
 
+    def change_status(self, user, status):
+        db.engine.execute(
+            "update apply set status={} where user_id={} and position_id={}".format(status, user.id, self.id))
+        db.session.commit()
 
 
 class Education(db.Model):
