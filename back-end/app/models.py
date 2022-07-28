@@ -135,6 +135,25 @@ class Position(db.Model):
     def __repr__(self):
         return '<Position {}>'.format(self.name)
 
+    def to_dict(self, detail=False):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'department': self.department,
+            'location': self.location
+        }
+        if detail:
+            data['describe'] = self.describe
+            data['requirement'] = self.requirement
+
+        return data
+
+    def from_dict(self, data):
+        for field in ['name', 'department', 'location', 'describe', 'requirement']:
+            if field in data:
+                setattr(self, field, data[field])
+
+
 
 class Education(db.Model):
     __tablename__ = 'educations'

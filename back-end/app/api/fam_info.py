@@ -90,7 +90,7 @@ def delete_fam_info(id):
         if info.id == int(data['id']):
             db.session.delete(info)
             db.session.commit()
-            return jsonify([info.to_dict() for info in fam_info])
+            return jsonify([info.to_dict() for info in user.user_fam_info])
 
     message['id'] = '请提供正确的id信息'
     bad_request(message)

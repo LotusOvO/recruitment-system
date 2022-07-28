@@ -33,3 +33,10 @@ def verify_token(token):
 @token_auth.error_handler
 def token_auth_error():
     return error_response(401)
+
+
+def verify_admin():
+    if g.current_user:
+        return g.current_user.role == 1
+    else:
+        return False
