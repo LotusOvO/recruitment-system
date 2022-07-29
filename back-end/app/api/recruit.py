@@ -11,7 +11,7 @@ from .. import db
 @token_auth.login_required
 def get_user_recruit(id):
     user = User.query.get_or_404(id)
-    if g.current_user.id != id or not verify_admin():
+    if g.current_user.id != id and not verify_admin():
         return error_response(403)
     positions = user.position
     return jsonify([position.to_dict(user=user) for position in positions])
@@ -137,7 +137,7 @@ def apply_refuse():
 
 
 @bp.route('/recruit/search', methods=['GET'])
-# @token_auth.login_required
+@token_auth.login_required
 def search_recruit():
     # 验证是否为管理员
     # if not verify_admin():

@@ -1,7 +1,7 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
 from . import bp
-from .auth import token_auth
+from .auth import token_auth, verify_admin
 from .errors import bad_request, error_response
 from ..models import User, UserBaseInfo
 from .. import db
@@ -11,7 +11,7 @@ from .. import db
 @token_auth.login_required
 def get_user_base_info(id):
     user = User.query.get_or_404(id)
-    if g.current_user.id != id:
+    if g.current_user.id != id and not verify_admin():
         return error_response(403)
     if user.user_info:
         return jsonify(user.user_info.to_dict())

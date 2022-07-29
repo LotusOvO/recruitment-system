@@ -1,7 +1,7 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
 from . import bp
-from .auth import token_auth
+from .auth import token_auth, verify_admin
 from .errors import bad_request, error_response
 from ..models import User, Family
 from .. import db
@@ -11,7 +11,7 @@ from .. import db
 @token_auth.login_required
 def get_fam_info(id):
     user = User.query.get_or_404(id)
-    if g.current_user.id != id:
+    if g.current_user.id != id and not verify_admin():
         return error_response(403)
     fam_info = user.user_fam_info
     return jsonify([info.to_dict() for info in fam_info])

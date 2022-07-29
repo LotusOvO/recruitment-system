@@ -9,7 +9,7 @@ apply = db.Table(
     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), nullable=False),
     db.Column('position_id', db.Integer, db.ForeignKey('positions.id'), nullable=False),
     db.Column('status', db.Integer, default=0)
-    # 0-待审  1-初审    2-一面	3-二面	4-入职	-1-流程终止
+    # 0-待审 1-初审 2-一面 3-二面 4-入职 -1-流程终止
 )
 
 
@@ -67,6 +67,7 @@ class User(db.Model):
         payload = {
             'user_id': self.id,
             'user_name': self.user_info.name if self.user_info and self.user_info.name else self.email,
+            'role': self.role,
             'exp': now + timedelta(seconds=exp_in),
             'iat': now
         }
