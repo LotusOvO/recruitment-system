@@ -1,7 +1,7 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
 from . import bp
-from .auth import token_auth
+from .auth import token_auth, verify_admin
 from .errors import bad_request, error_response
 from ..models import User, Position, apply, UserBaseInfo
 from .. import db
@@ -11,7 +11,7 @@ from .. import db
 @token_auth.login_required
 def get_user_recruit(id):
     user = User.query.get_or_404(id)
-    if g.current_user.id != id:
+    if g.current_user.id != id or not verify_admin():
         return error_response(403)
     positions = user.position
     return jsonify([position.to_dict(user=user) for position in positions])
@@ -67,7 +67,7 @@ def cancel_recruit(id):
 
 
 @bp.route('/recruit/advance', methods=['PUT'])
-# @token_auth.login_required
+@token_auth.login_required
 def apply_advance():
     # 验证是否为管理员
     # if not verify_admin():
@@ -134,3 +134,28 @@ def apply_refuse():
         'position': position.to_dict(user=user)
     }
     return jsonify(response)
+
+
+@bp.route('/recruit/search', methods=['GET'])
+# @token_auth.login_required
+def search_recruit():
+    # 验证是否为管理员
+    # if not verify_admin():
+    #     return bad_request('没有该权限')
+    user_name = request.args.get('user_name', None)
+    position_name = request.args.get('position_name', '')
+    users = [user for user in UserBaseInfo.query.filter(UserBaseInfo.name.like('%{}%'.format(user_name)))]
+    users = [user.users for user in users]
+    result = []
+    for user in users:  # type:User
+        positions = [position for position in user.position if position_name in position.name]
+        for position in positions:
+            position_data = position.to_dict(user=user)    # type: dict
+            user_data = user.user_info.to_dict(detail=False)
+            data = {
+                'position': position_data,
+                'user': user_data
+            }
+            result.append(data)
+
+    return jsonify(result)

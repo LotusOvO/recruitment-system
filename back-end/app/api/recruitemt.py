@@ -1,5 +1,6 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
+from sqlalchemy import and_
 from . import bp
 from .auth import token_auth, verify_admin
 from .errors import bad_request, error_response
@@ -87,3 +88,13 @@ def delete_recruitment(id):
     db.session.commit()
 
     return jsonify([position.to_dict() for position in Position.query])
+
+
+@bp.route('recruitment/search', methods=['GET'])
+def search_recruitment():
+    name = request.args.get('name', None)
+    location = request.args.get('location', None)
+    positions = Position.query.filter(
+        and_(Position.name.like('%{}%'.format(name)), Position.location.like('%{}%'.format(location)))).all()
+
+    return jsonify([position.to_dict() for position in positions])

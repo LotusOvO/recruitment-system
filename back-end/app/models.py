@@ -6,8 +6,8 @@ from flask import url_for, current_app
 
 apply = db.Table(
     'apply',
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('position_id', db.Integer, db.ForeignKey('positions.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), nullable=False),
+    db.Column('position_id', db.Integer, db.ForeignKey('positions.id'), nullable=False),
     db.Column('status', db.Integer, default=0)
     # 0-待审  1-初审    2-一面	3-二面	4-入职	-1-流程终止
 )
@@ -20,7 +20,7 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     role = db.Column(db.Integer, default=0)
 
-    user_info = db.relationship('UserBaseInfo', uselist=False)
+    user_info = db.relationship('UserBaseInfo', uselist=False, backref=db.backref('users'))
     user_edu_info = db.relationship('Education', backref=db.backref('users'))
     user_work_info = db.relationship('Work', backref=db.backref('users'))
     user_fam_info = db.relationship('Family', backref=db.backref('users'))
@@ -174,7 +174,7 @@ class Education(db.Model):
     major = db.Column(db.String(32), nullable=False)
     begin_date = db.Column(db.String(16), nullable=False)
     end_date = db.Column(db.String(16), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         return '<Education {}>'.format(self.id)
@@ -204,7 +204,7 @@ class Work(db.Model):
     begin_date = db.Column(db.String(16), nullable=False)
     end_date = db.Column(db.String(16), nullable=False)
     describe = db.Column(db.Text)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         return '<Work {}>'.format(self.id)
@@ -233,7 +233,7 @@ class Family(db.Model):
     phone_number = db.Column(db.String(16), nullable=False)
     work = db.Column(db.String(32))
     relation = db.Column(db.String(16), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     def __repr__(self):
         return '<Family {}>'.format(self.name)
