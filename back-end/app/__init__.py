@@ -3,7 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from ..config import Config
-
+from .extensions import mail
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -15,6 +15,7 @@ def create_app(config_class=Config):
     CORS(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    mail.init_app(app)
 
     # 注册blueprint
     from .api import bp as api_bp

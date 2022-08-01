@@ -5,6 +5,7 @@ from .auth import token_auth
 from .errors import bad_request, error_response
 from ..models import User
 from .. import db
+from ...utils import mail
 
 
 @bp.route('/users', methods=['POST'])
@@ -36,7 +37,54 @@ def create_user():
     db.session.add(user)
     db.session.commit()
 
+    if user.role == 1:
+        user.confirmed = True
+        db.session.commit()
+    else:
+        token = user.generate_confirm_jwt()
+        if not data.get('confirm_email_base_url'):
+            confirm_url = 'http://127.0.0.1:5000/api/confirm/' + token
+        else:
+            confirm_url = data.get('confirm_email_base_url') + token
+
+        text_body = '''
+            欢迎注册中国电信中山分公司人员招聘系统！
+            点击链接完成账户激活：{}
+            注意: 不要回复该邮件。
+            '''.format(confirm_url)
+
+        html_body = '''
+            <p>欢迎注册<b>中国电信中山分公司人员招聘系统</b>！</p>
+            <p>请点击该链接完成账户验证 <a href="{0}">点击这里</a>。</p>
+            <p>如果打不开可以复制链接到浏览器窗口打开。</p>
+            <p><b>{0}</b></p>
+            <p><small>注意: 不要回复该邮件。</small></p>
+            '''.format(confirm_url)
+
+        mail.send_email('[中国电信中山分公司] 邮箱验证',
+                        sender=current_app.config['MAIL_SENDER'],
+                        recipients=[user.email],
+                        text_body=text_body,
+                        html_body=html_body)
+
     response = jsonify(user.to_dict())
     response.status_code = 201
     response.headers['Location'] = url_for('api.get_user_base_info', id=user.id)
     return response
+
+
+@bp.route('/confirm/<token>', methods=['GET'])
+@token_auth.login_required
+def verity_confirm(token):
+    if g.current_user.confirmed:
+        return bad_request('你已经完成邮箱验证')
+    if g.current_user.verity_confirm_jwt(token):
+        db.session.commit()
+        token = g.current_user.get_jwt()
+        return jsonify({
+            'status': 'success',
+            'message': '已成功验证邮箱。',
+            'token': token
+        })
+    else:
+        return bad_request('该链接无效或已超时。')

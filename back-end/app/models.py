@@ -19,6 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(64), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
     role = db.Column(db.Integer, default=0)
+    confirmed = db.Column(db.Boolean, default=False)
 
     user_info = db.relationship('UserBaseInfo', uselist=False, backref=db.backref('users'))
     user_edu_info = db.relationship('Education', backref=db.backref('users'))
@@ -53,7 +54,8 @@ class User(db.Model):
         return data
 
     def from_dict(self, data):
-        pass
+        if 'password' in data:
+            self.set_password(data['password'])
 
     def new_user(self, data):
         if 'email' in data:
@@ -68,6 +70,7 @@ class User(db.Model):
             'user_id': self.id,
             'user_name': self.user_info.name if self.user_info and self.user_info.name else self.email,
             'role': self.role,
+            'confirmed': self.confirmed,
             'exp': now + timedelta(seconds=exp_in),
             'iat': now
         }
@@ -93,6 +96,35 @@ class User(db.Model):
 
     def is_apply(self, position):
         return self.position.count(position) > 0
+
+    def generate_confirm_jwt(self, expires_in=1800):
+        now = datetime.utcnow()
+        payload = {
+            'confirm': self.id,
+            'exp': now + timedelta(seconds=expires_in),
+            'iat': now
+        }
+        return jwt.encode(
+            payload,
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256')
+
+    def verify_confirm_jwt(self, token):
+        try:
+            payload = jwt.decode(
+                token,
+                current_app.config['SECRET_KEY'],
+                algorithms='HS256'
+            )
+        except (jwt.exceptions.ExpiredSignatureError,
+                jwt.exceptions.InvalidSignatureError,
+                jwt.exceptions.DecodeError) as e:
+            return False
+        if payload.get('confirm') != self.id:
+            return False
+        setattr(self, 'confirmed', True)
+        db.session.commit()
+        return True
 
 
 class UserBaseInfo(db.Model):
