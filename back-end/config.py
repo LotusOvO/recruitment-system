@@ -11,7 +11,7 @@ class Config(object):
     FLASK_APP = os.getenv('FLASK_APP')
     FLASK_DEBUG = os.getenv('FLASK_DEBUG')
 
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:12345689@127.0.0.1:3306/rec_sys'
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     SECRET_KEY = os.getenv('SECRET_KEY')
