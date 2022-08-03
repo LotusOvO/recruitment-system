@@ -1,7 +1,7 @@
 from flask import jsonify
 from werkzeug.http import HTTP_STATUS_CODES
-from . import bp
-from .. import db
+from app.api import bp
+from app import db
 
 
 def error_response(status_code, message=None):

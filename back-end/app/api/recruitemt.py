@@ -1,11 +1,11 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
 from sqlalchemy import and_
-from . import bp
-from .auth import token_auth, verify_admin
-from .errors import bad_request, error_response
-from ..models import User, Position
-from .. import db
+from app.api import bp
+from app.api.auth import token_auth, verify_admin
+from app.api.errors import bad_request, error_response
+from app.models import User, Position
+from app import db
 
 
 @bp.route('recruitment', methods=['GET'])

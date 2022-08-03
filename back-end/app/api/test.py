@@ -1,6 +1,6 @@
 from flask import jsonify
-from . import bp
-from ...utils import mail
+from app.api import bp
+from utils import mail
 from flask import current_app
 
 

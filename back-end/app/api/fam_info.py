@@ -1,10 +1,10 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
-from . import bp
-from .auth import token_auth, verify_admin
-from .errors import bad_request, error_response
-from ..models import User, Family
-from .. import db
+from app.api import bp
+from app.api.auth import token_auth, verify_admin
+from app.api.errors import bad_request, error_response
+from app.models import User, Family
+from app import db
 
 
 @bp.route('fam_info/<int:id>', methods=['GET'])

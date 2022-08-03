@@ -1,11 +1,11 @@
 import re
 from flask import request, jsonify, url_for, g, current_app
-from . import bp
-from .auth import token_auth
-from .errors import bad_request, error_response
-from ..models import User
-from .. import db
-from ...utils import mail
+from app.api import bp
+from app.api.auth import token_auth
+from app.api.errors import bad_request, error_response
+from app.models import User
+from app import db
+from utils import mail
 
 
 @bp.route('/users', methods=['POST'])
