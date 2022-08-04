@@ -10,6 +10,7 @@ load_dotenv(os.path.join(basedir, '.env'), encoding='utf-8')
 class Config(object):
     FLASK_APP = os.getenv('FLASK_APP')
     FLASK_DEBUG = os.getenv('FLASK_DEBUG')
+    JSON_AS_ASCII = False
 
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
