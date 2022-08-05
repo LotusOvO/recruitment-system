@@ -90,7 +90,7 @@ def verity_confirm(token):
         return bad_request('该链接无效或已超时。')
 
 
-@bp.route('/confirm/<id>', method=['POST'])
+@bp.route('/confirm/<id>', methods=['POST'])
 @token_auth.login_required
 def send_confirm(id):
     user = User.query.get_or_404(id)
