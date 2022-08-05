@@ -24,7 +24,7 @@
     </div>
     <br>
     <p>没有账号？
-      <router-link to="/register">前往注册</router-link>
+      <router-link to="/register" >前往注册</router-link>
     </p>
 <!--    <p>-->
 <!--      Forgot Your Password?-->
@@ -86,6 +86,8 @@ export default {
         window.localStorage.setItem('recsys-user-token', response.data.token)
         store.loginAction()
 
+        this.$router.push('/')
+
       }).catch((error) => {
         // handle error
         console.log(error)
@@ -107,7 +109,7 @@ export default {
       if (email)
         return true;
     }
-  }
+  },
 }
 </script>
 
