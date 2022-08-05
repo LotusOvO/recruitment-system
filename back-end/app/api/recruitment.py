@@ -92,8 +92,8 @@ def delete_recruitment(id):
 
 @bp.route('recruitment/search', methods=['GET'])
 def search_recruitment():
-    name = request.args.get('name', None)
-    location = request.args.get('location', None)
+    name = request.args.get('name', "")
+    location = request.args.get('location', "")
     positions = Position.query.filter(
         and_(Position.name.like('%{}%'.format(name)), Position.location.like('%{}%'.format(location)))).all()
 
