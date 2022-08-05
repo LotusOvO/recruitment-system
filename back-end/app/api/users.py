@@ -88,3 +88,44 @@ def verity_confirm(token):
         })
     else:
         return bad_request('该链接无效或已超时。')
+
+
+@bp.route('/confirm/<id>', method=['POST'])
+@token_auth.login_required
+def send_confirm(id):
+    user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
+    if g.current_user.confirmed:
+        return bad_request('你已经完成邮箱验证')
+
+    data = request.get_json()
+    if not data:
+        return bad_request('需要提供JSON数据')
+    token = user.generate_confirm_jwt()
+    if not data.get('confirm_email_base_url'):
+        confirm_url = 'http://127.0.0.1:5000/api/confirm/' + token
+    else:
+        confirm_url = data.get('confirm_email_base_url') + token
+
+    text_body = '''
+                欢迎注册中国电信中山分公司人员招聘系统！
+                点击链接完成账户激活：{}
+                注意: 不要回复该邮件。
+                '''.format(confirm_url)
+
+    html_body = '''
+                <p>欢迎注册<b>中国电信中山分公司人员招聘系统</b>！</p>
+                <p>请点击该链接完成账户验证 <a href="{0}">点击这里</a>。</p>
+                <p>如果打不开可以复制链接到浏览器窗口打开。</p>
+                <p><b>{0}</b></p>
+                <p><small>注意: 不要回复该邮件。</small></p>
+                '''.format(confirm_url)
+
+    mail.send_email('[中国电信中山分公司] 邮箱验证',
+                    sender=current_app.config['MAIL_SENDER'],
+                    recipients=[user.email],
+                    text_body=text_body,
+                    html_body=html_body)
+
+    return jsonify({'message': "已发送邮件"})
