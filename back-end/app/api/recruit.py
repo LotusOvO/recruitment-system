@@ -142,7 +142,7 @@ def search_recruit():
     # 验证是否为管理员
     # if not verify_admin():
     #     return bad_request('没有该权限')
-    user_name = request.args.get('user_name', None)
+    user_name = request.args.get('user_name', '')
     position_name = request.args.get('position_name', '')
     users = [user for user in UserBaseInfo.query.filter(UserBaseInfo.name.like('%{}%'.format(user_name)))]
     users = [user.users for user in users]
