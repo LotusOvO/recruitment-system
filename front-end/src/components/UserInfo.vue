@@ -20,9 +20,15 @@
         <div class="tab-pane fade show active" id="v-pills-base-info" role="tabpanel" aria-labelledby="v-pills-base-info-tab">
           <BaseInfo></BaseInfo>
         </div>
-        <div class="tab-pane fade" id="v-pills-work-info" role="tabpanel" aria-labelledby="v-pills-work-info-tab">...</div>
-        <div class="tab-pane fade" id="v-pills-family-info" role="tabpanel" aria-labelledby="v-pills-family-info-tab">...</div>
-        <div class="tab-pane fade" id="v-pills-education-info" role="tabpanel" aria-labelledby="v-pills-education-info-tab">...</div>
+        <div class="tab-pane fade" id="v-pills-work-info" role="tabpanel" aria-labelledby="v-pills-work-info-tab">
+          <WorkInfo></WorkInfo>
+        </div>
+        <div class="tab-pane fade" id="v-pills-family-info" role="tabpanel" aria-labelledby="v-pills-family-info-tab">
+          <FamilyInfo></FamilyInfo>
+        </div>
+        <div class="tab-pane fade" id="v-pills-education-info" role="tabpanel" aria-labelledby="v-pills-education-info-tab">
+          <EducationInfo></EducationInfo>
+        </div>
       </div>
     </div>
   </div>
@@ -30,9 +36,16 @@
 
 <script>
 import BaseInfo from "@/components/BaseInfo";
+import WorkInfo from "@/components/WorkInfo";
+import FamilyInfo from "@/components/FamilyInfo";
+import EducationInfo from "@/components/EducationInfo";
+
 export default {
   name: "UserInfo",
   components:{
+    EducationInfo,
+    FamilyInfo,
+    WorkInfo,
     BaseInfo,
   }
 }
@@ -48,5 +61,6 @@ export default {
   border-width: 2px;
   border-radius: 10px;
   border-color: #0d6efd;
+  width: 60px;
 }
 </style>
