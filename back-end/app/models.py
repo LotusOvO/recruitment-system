@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -69,7 +72,7 @@ class User(db.Model):
         payload = {
             'user_id': self.id,
             'user_name': self.user_info.name if self.user_info and self.user_info.name else self.email,
-            'role': self.role,
+            'user_role': self.role,
             'confirmed': self.confirmed,
             'exp': now + timedelta(seconds=exp_in),
             'iat': now

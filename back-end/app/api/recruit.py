@@ -1,4 +1,6 @@
-import re
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import request, jsonify, url_for, g, current_app
 from app.api import bp
 from app.api.auth import token_auth, verify_admin
@@ -28,11 +30,11 @@ def create_recruit(id):
         return bad_request('必须提供JSON数据')
 
     message = {}
-    if 'id' not in data:
-        message['id'] = '请提供id数据'
+    if 'position_id' not in data:
+        message['position_id'] = '请提供id数据'
     if message:
         bad_request(message)
-    position = Position.query.get_or_404(data['id'])
+    position = Position.query.get_or_404(data['position_id'])
 
     if user.is_apply(position):
         return bad_request('已经应聘该岗位')
@@ -52,11 +54,11 @@ def cancel_recruit(id):
         return bad_request('必须提供JSON数据')
 
     message = {}
-    if 'id' not in data:
-        message['id'] = '请提供id数据'
+    if 'position_id' not in data:
+        message['position_id'] = '请提供id数据'
     if message:
         bad_request(message)
-    position = Position.query.get_or_404(data['id'])
+    position = Position.query.get_or_404(data['position_id'])
 
     if not user.is_apply(position):
         return bad_request('没有应聘该岗位')
@@ -142,7 +144,7 @@ def search_recruit():
     # 验证是否为管理员
     # if not verify_admin():
     #     return bad_request('没有该权限')
-    user_name = request.args.get('user_name', None)
+    user_name = request.args.get('user_name', '')
     position_name = request.args.get('position_name', '')
     users = [user for user in UserBaseInfo.query.filter(UserBaseInfo.name.like('%{}%'.format(user_name)))]
     users = [user.users for user in users]

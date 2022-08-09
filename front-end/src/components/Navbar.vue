@@ -17,7 +17,10 @@
             <router-link :to="{name:'userinfo', params:{user_id: sharedState.user_id}}" class="dropdown-item">个人信息</router-link>
           </li>
           <li>
-            <router-link to="/" class="dropdown-item">招聘进度</router-link>
+            <router-link :to="{name:'my_recruitment', params: {user_id: sharedState.user_id}}" class="dropdown-item">招聘进度</router-link>
+          </li>
+          <li v-if="sharedState.user_role === 1">
+            <router-link :to="{name:'manage',params:{user_id:sharedState.user_id}}" class="dropdown-item">管理员界面</router-link>
           </li>
           <li>
             <hr class="dropdown-divider">

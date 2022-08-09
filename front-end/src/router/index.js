@@ -6,6 +6,8 @@ import RegisterPage from "@/components/Register";
 import PositionsPage from "@/components/Positions";
 import positionDetail from "@/components/PositionDetail";
 import UserInfo from "@/components/UserInfo";
+import RecruitInfo from "@/components/RecruitInfo";
+import ManagePage from "@/components/ManagePage";
 
 Vue.use(VueRouter)
 
@@ -40,6 +42,16 @@ const routes = [
         path: '/userinfo/:user_id',
         name: 'userinfo',
         component: UserInfo
+    },
+    {
+        path: '/my_recruitment/:user_id',
+        name: 'my_recruitment',
+        component: RecruitInfo
+    },
+    {
+        path: 'manage/:user_id',
+        name: 'manage',
+        component: ManagePage
     }
 ]
 

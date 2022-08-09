@@ -1,4 +1,6 @@
-import re
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import request, jsonify, url_for, g, current_app
 from sqlalchemy import and_
 from app.api import bp

@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import g
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from app.api.errors import error_response

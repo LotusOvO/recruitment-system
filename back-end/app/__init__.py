@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy

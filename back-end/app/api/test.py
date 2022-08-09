@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import jsonify
 from app.api import bp
 from utils import mail

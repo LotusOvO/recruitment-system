@@ -8,13 +8,15 @@
         <p class="card-text">工作地点：{{ position.location }}</p>
         <p class="card-text">工作要求：{{ position.requirement }}</p>
         <p class="card-text">工作描述：{{ position.describe }}</p>
-        <router-link to="" class="btn btn-primary">应聘该岗位</router-link>
+        <button class="btn btn-primary" v-on:click="applyPosition(position.id)">应聘该岗位</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import store from "@/store";
+// import qs from 'qs'
 export default {
   name: "PositionDetail",
   data() {
@@ -37,6 +39,17 @@ export default {
             this.position = response.data
           })
           .catch((error) => {
+            console.log(error)
+          })
+    },
+    applyPosition(position_id){
+      const user_id = store.state.user_id;
+      const path = '/recruit/' + user_id;
+      this.$axios.post(path, {position_id: position_id})
+          .then((response)=>{
+            console.log(response.data)
+          })
+          .catch((error) =>{
             console.log(error)
           })
     }

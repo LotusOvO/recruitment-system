@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from flask import g, jsonify
 from app.api import bp
 from app.api.auth import basic_auth
