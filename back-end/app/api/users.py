@@ -76,6 +76,18 @@ def create_user():
     return response
 
 
+@bp.route('/users/<int:id>', methods=['DELETE'])
+@token_auth.login_required
+def delete_user(id):
+    user = User.query.get_or_404(id)
+    if g.current_user.id != id:
+        return error_response(403)
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({'message': '该用户已注销'})
+
+
 @bp.route('/confirm/<token>', methods=['GET'])
 @token_auth.login_required
 def verity_confirm(token):

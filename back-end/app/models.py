@@ -24,15 +24,14 @@ class User(db.Model):
     role = db.Column(db.Integer, default=0)
     confirmed = db.Column(db.Boolean, default=False)
 
-    user_info = db.relationship('UserBaseInfo', uselist=False, backref=db.backref('users'))
-    user_edu_info = db.relationship('Education', backref=db.backref('users'))
-    user_work_info = db.relationship('Work', backref=db.backref('users'))
-    user_fam_info = db.relationship('Family', backref=db.backref('users'))
+    user_info = db.relationship('UserBaseInfo', uselist=False, backref=db.backref('users'), cascade="all")
+    user_edu_info = db.relationship('Education', backref=db.backref('users'), cascade="all")
+    user_work_info = db.relationship('Work', backref=db.backref('users'), cascade="all")
+    user_fam_info = db.relationship('Family', backref=db.backref('users'), cascade="all")
 
     position = db.relationship('Position',
                                secondary=apply,
-
-                               backref=db.backref('users', lazy='dynamic'))
+                               backref=db.backref('users', lazy='dynamic'), cascade="all")
 
     def __repr__(self):
         return '<User {}>'.format(self.id)
