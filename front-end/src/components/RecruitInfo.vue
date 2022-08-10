@@ -45,9 +45,11 @@ export default {
       const path = '/recruit/' + this.$route.params.user_id;
       this.$axios.delete(path,{data:{position_id:position_id}})
           .then((response) =>{
+            this.$toasted.success('已取消应聘该岗位')
             this.recruitments = response.data;
           })
           .catch((error) =>{
+            this.$toasted.error('操作失败')
             console.log(error)
           })
     },

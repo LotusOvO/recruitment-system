@@ -111,9 +111,11 @@ export default {
         if (this.education[i].id === education_id) {
           this.$axios.put(path, this.education[i])
               .then((response) => {
+                this.$toasted.success('保存完成')
                 this.education = response.data;
               })
               .catch((error) => {
+                this.$toasted.error('保存失败')
                 console.log(error)
               })
           break;
@@ -124,9 +126,11 @@ export default {
       const path = '/edu_info/' + this.$route.params.user_id;
       this.$axios.delete(path, {data: {id: education_id}})
           .then((response) => {
+            this.$toasted.success('删除完成')
             this.education = response.data;
           })
           .catch((error) => {
+            this.$toasted.error('删除失败')
             console.log(error);
           })
     },
@@ -162,9 +166,11 @@ export default {
           end_date: this.educationForm.end_date
         })
             .then((response) => {
+              this.$toasted.success('新增完成')
               this.education = response.data;
             })
             .catch((error) => {
+              this.$toasted.error('新增失败')
               console.log(error)
             })
       }

@@ -51,6 +51,7 @@ export default {
     logout() {
       store.logoutAction();
       this.$router.replace({name: 'login'});
+      this.$toasted.success('注销成功')
     }
   }
 }

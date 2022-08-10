@@ -60,9 +60,11 @@ export default {
       const path = '/base_info/' + this.$route.params.user_id;
       this.$axios.put(path, this.base_info)
           .then((response) => {
+            this.$toasted.success('保存完成')
             this.base_info = response.data;
           })
           .catch((error) => {
+            this.$toasted.error(error.response.data.message)
             console.log(error)
           })
     }

@@ -17,6 +17,7 @@
           <PositionManage></PositionManage>
         </div>
         <div class="tab-pane fade" id="v-pills-recruitment" role="tabpanel" aria-labelledby="v-pills-recruitment-tab">
+          <RecruitManage></RecruitManage>
         </div>
       </div>
     </div>
@@ -25,9 +26,10 @@
 
 <script>
 import PositionManage from "@/components/PositionManage";
+import RecruitManage from "@/components/RecruitManage";
 export default {
   name: "ManagePage",
-  components: {PositionManage},
+  components: {RecruitManage, PositionManage},
 }
 </script>
 

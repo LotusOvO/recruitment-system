@@ -103,7 +103,7 @@ def apply_advance():
     return jsonify(response)
 
 
-@bp.route('/recruit/advance', methods=['PUT'])
+@bp.route('/recruit/refuse', methods=['PUT'])
 @token_auth.login_required
 def apply_refuse():
     # 验证是否为管理员

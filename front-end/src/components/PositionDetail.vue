@@ -47,9 +47,11 @@ export default {
       const path = '/recruit/' + user_id;
       this.$axios.post(path, {position_id: position_id})
           .then((response)=>{
+            this.$toasted.success('应聘成功')
             console.log(response.data)
           })
           .catch((error) =>{
+            this.$toasted.error(error.response.data.message)
             console.log(error)
           })
     }

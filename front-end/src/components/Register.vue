@@ -88,6 +88,7 @@ export default {
       this.$axios.post(path, payload)
           .then(() => {
             this.$router.push('/login')
+            this.$toasted.success('注册成功')
           })
           .catch((error) => {
             if ('email' in error.response.data.message) {
@@ -96,6 +97,7 @@ export default {
             if ('password' in error.response.data.message) {
               this.registerForm.emailError = error.response.data.message.password
             }
+            this.$toasted.error('注册失败')
       })
     }
   }

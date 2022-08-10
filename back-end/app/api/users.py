@@ -93,7 +93,7 @@ def delete_user(id):
 def verity_confirm(token):
     if g.current_user.confirmed:
         return bad_request('你已经完成邮箱验证')
-    if g.current_user.verity_confirm_jwt(token):
+    if g.current_user.verify_confirm_jwt(token):
         db.session.commit()
         token = g.current_user.get_jwt()
         return jsonify({
@@ -105,7 +105,7 @@ def verity_confirm(token):
         return bad_request('该链接无效或已超时。')
 
 
-@bp.route('/confirm/<id>', methods=['POST'])
+@bp.route('/confirm/<int:id>', methods=['POST'])
 @token_auth.login_required
 def send_confirm(id):
     user = User.query.get_or_404(id)
@@ -115,8 +115,6 @@ def send_confirm(id):
         return bad_request('你已经完成邮箱验证')
 
     data = request.get_json()
-    if not data:
-        return bad_request('需要提供JSON数据')
     token = user.generate_confirm_jwt()
     if not data.get('confirm_email_base_url'):
         confirm_url = 'http://127.0.0.1:5000/api/confirm/' + token

@@ -110,9 +110,11 @@ export default {
         if (this.works[i].id === work_id) {
           this.$axios.put(path, this.works[i])
               .then((response) => {
+                this.$toasted.success('保存完成')
                 this.works = response.data;
               })
               .catch((error) => {
+                this.$toasted.error('保存失败')
                 console.log(error)
               })
           break;
@@ -123,9 +125,11 @@ export default {
       const path = '/work_info/' + this.$route.params.user_id;
       this.$axios.delete(path, {data: {id: work_id}})
           .then((response) => {
+            this.$toasted.success('删除完成')
             this.works = response.data;
           })
           .catch((error) => {
+            this.$toasted.error('删除失败')
             console.log(error);
           })
     },
@@ -158,9 +162,11 @@ export default {
           describe: this.workForm.describe
         })
             .then((response) => {
+              this.$toasted.success('新增完成')
               this.works = response.data;
             })
             .catch((error) => {
+              this.$toasted.error('新增失败')
               console.log(error)
             })
       }

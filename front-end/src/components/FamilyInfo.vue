@@ -100,9 +100,11 @@ export default {
         if (this.family[i].id === family_id) {
           this.$axios.put(path, this.family[i])
               .then((response) => {
+                this.$toasted.success('保存完成')
                 this.family = response.data;
               })
               .catch((error) => {
+                this.$toasted.error('保存失败')
                 console.log(error)
               })
           break;
@@ -113,9 +115,11 @@ export default {
       const path = '/fam_info/' + this.$route.params.user_id;
       this.$axios.delete(path, {data: {id: family_id}})
           .then((response) => {
+            this.$toasted.success('删除完成')
             this.family = response.data;
           })
           .catch((error) => {
+            this.$toasted.error('删除失败')
             console.log(error);
           })
     },
@@ -146,9 +150,11 @@ export default {
           relation: this.familyForm.relation
         })
             .then((response) => {
+              this.$toasted.success('新增完成')
               this.family = response.data;
             })
             .catch((error) => {
+              this.$toasted.error('新增失败')
               console.log(error)
             })
       }

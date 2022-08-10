@@ -196,9 +196,11 @@ export default {
         describe: this.positionForm.describe
       })
           .then((response) => {
+            this.$toasted.success('新增完成')
             this.positions = response.data;
           })
           .catch((error) => {
+            this.$toasted.error('新增失败')
             console.log(error)
           })
       this.clearForm();
@@ -207,9 +209,11 @@ export default {
       const path = '/recruitment/' + position_id;
       this.$axios.delete(path)
           .then((response) => {
+            this.$toasted.success('删除完成')
             this.positions = response.data;
           })
           .catch((error) => {
+            this.$toasted.error('删除失败')
             console.log(error)
           })
     },
@@ -253,9 +257,11 @@ export default {
         describe: this.positionForm.describe
       })
           .then(() => {
+            this.$toasted.success('保存完成')
             this.searchPosition();
           })
           .catch((error) => {
+            this.$toasted.error('保存失败')
             console.log(error);
           })
     }

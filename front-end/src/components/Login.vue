@@ -87,11 +87,13 @@ export default {
         store.loginAction()
 
         this.$router.push('/')
+        this.$toasted.success('登录成功')
 
       }).catch((error) => {
         // handle error
         console.log(error)
         if (error) {
+          this.$toasted.error('登录失败')
           if (error.response.status === 401) {
             this.loginForm.usernameError = '邮箱或密码错误'
             this.loginForm.passwordError = '邮箱或密码错误'
