@@ -49,7 +49,7 @@ const routes = [
         component: RecruitInfo
     },
     {
-        path: 'manage/:user_id',
+        path: '/manage/:user_id',
         name: 'manage',
         component: ManagePage
     }
@@ -62,33 +62,33 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const token = window.localStorage.getItem('recsys-user-token')
-  if (to.matched.some(record => record.meta.requiresAuth) && (!token)) {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    })
-  } else if (token && to.name === 'login') {
-    // 用户已登录，但又去访问登录页面时不让他过去
-    next({
-      path: from.fullPath
-    })
-  } else if (to.matched.length === 0) {  // 要前往的路由不存在时
-    console.log('here')
-    console.log(to.matched)
-    // Vue.toasted.error('404: NOT FOUND', { icon: 'fingerprint' })
-    if (from.name) {
-      next({
-        name: from.name
-      })
+    const token = window.localStorage.getItem('recsys-user-token')
+    if (to.matched.some(record => record.meta.requiresAuth) && (!token)) {
+        next({
+            path: '/login',
+            query: {redirect: to.fullPath}
+        })
+    } else if (token && to.name === 'login') {
+        // 用户已登录，但又去访问登录页面时不让他过去
+        next({
+            path: from.fullPath
+        })
+    } else if (to.matched.length === 0) {  // 要前往的路由不存在时
+        console.log('here')
+        console.log(to.matched)
+        // Vue.toasted.error('404: NOT FOUND', { icon: 'fingerprint' })
+        if (from.name) {
+            next({
+                name: from.name
+            })
+        } else {
+            next({
+                path: '/'
+            })
+        }
     } else {
-      next({
-        path: '/'
-      })
+        next()
     }
-  } else {
-    next()
-  }
 })
 
 export default router

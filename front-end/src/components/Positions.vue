@@ -7,7 +7,8 @@
           <p class="card-text">岗位名称：{{ item.name }}</p>
           <p class="card-text">工作部门：{{ item.department }}</p>
           <p class="card-text">工作地点：{{ item.location }}</p>
-          <router-link :to="{ name: 'positionDetail', params:{position_id : item.id} } " class="btn btn-primary">查看详情</router-link>
+          <router-link :to="{ name: 'positionDetail', params:{position_id : item.id} } " class="btn btn-primary">查看详情
+          </router-link>
         </div>
       </div>
     </div>
@@ -15,11 +16,19 @@
 </template>
 
 <script>
+
 export default {
   name: "PositionPage",
   data() {
     return {
       positions: []
+    }
+  },
+  watch:{
+    '$route':{
+      handler(newVal){
+          this.searchPosition(newVal.query.name)
+      }
     }
   },
   methods: {
@@ -32,10 +41,27 @@ export default {
           .catch((error) => {
             console.log(error.response)
           })
+    },
+    searchPosition(name = '') {
+      let path = '/recruitment/search';
+      if (name !== '') {
+        path += '?name=' + name;
+      }
+      this.$axios.get(path)
+          .then((response) => {
+            this.positions = response.data
+          })
+          .catch((error) => {
+            console.log(error.response)
+          })
     }
   },
   created() {
-    this.getPositions();
+    if (this.$route.query.name) {
+      this.searchPosition(this.$route.query.name)
+    } else {
+      this.getPositions();
+    }
   }
 }
 </script>
