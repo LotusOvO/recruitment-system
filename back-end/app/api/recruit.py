@@ -72,8 +72,8 @@ def cancel_recruit(id):
 @token_auth.login_required
 def apply_advance():
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
     data = request.get_json()
     if not data:
         return bad_request('必须提供JSON数据')
@@ -95,7 +95,9 @@ def apply_advance():
     elif result['status'] == 4:
         return bad_request('该招聘流程已完成')
 
-    position.change_status(user=user, status=result['status']+1)
+    position.change_status(user=user, status=result['status'] + 1)
+    current_app.logger.info("管理员{}将用户{}与职位{}的招聘流程操作到下一阶段".format(g.current_user.id, data['user_id'],
+                                                                 data['position_id']))
     response = {
         'user': user_info.to_dict(detail=False),
         'position': position.to_dict(user=user)
@@ -107,8 +109,8 @@ def apply_advance():
 @token_auth.login_required
 def apply_refuse():
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
     data = request.get_json()
     if not data:
         return bad_request('必须提供JSON数据')
@@ -131,6 +133,8 @@ def apply_refuse():
         return bad_request('该招聘流程已完成')
 
     position.change_status(user=user, status=-1)
+    current_app.logger.info("管理员{}将用户{}与职位{}的招聘流程操作结束".format(g.current_user.id, data['user_id'],
+                                                              data['position_id']))
     response = {
         'user': user_info.to_dict(detail=False),
         'position': position.to_dict(user=user)
@@ -142,8 +146,8 @@ def apply_refuse():
 @token_auth.login_required
 def search_recruit():
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
     user_name = request.args.get('user_name', '')
     position_name = request.args.get('position_name', '')
     users = [user for user in UserBaseInfo.query.filter(UserBaseInfo.name.like('%{}%'.format(user_name)))]
@@ -152,7 +156,7 @@ def search_recruit():
     for user in users:  # type:User
         positions = [position for position in user.position if position_name in position.name]
         for position in positions:
-            position_data = position.to_dict(user=user)    # type: dict
+            position_data = position.to_dict(user=user)  # type: dict
             user_data = user.user_info.to_dict(detail=False)
             data = {
                 'position': position_data,

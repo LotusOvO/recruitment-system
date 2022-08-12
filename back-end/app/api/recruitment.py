@@ -26,8 +26,8 @@ def get_recruitment(id):
 @token_auth.login_required
 def create_recruitment():
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
 
     data = request.get_json()
     if not data:
@@ -56,8 +56,8 @@ def create_recruitment():
 @token_auth.login_required
 def update_recruitment(id):
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
     position = Position.query.get_or_404(id)
     data = request.get_json()
     if not data:
@@ -82,8 +82,8 @@ def update_recruitment(id):
 @token_auth.login_required
 def delete_recruitment(id):
     # 验证是否为管理员
-    # if not verify_admin():
-    #     return bad_request('没有该权限')
+    if not verify_admin():
+        return bad_request('没有该权限')
     position = Position.query.get_or_404(id)
 
     db.session.delete(position)
