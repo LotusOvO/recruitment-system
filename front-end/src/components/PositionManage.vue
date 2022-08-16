@@ -18,11 +18,15 @@
           <p class="card-text">工作地点：{{ position.location }}</p>
           <div class="row">
             <div class="col-md-1"></div>
-            <button class="btn btn-warning col-md-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop0"
+            <button class="btn btn-primary col-md-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop4"
+                    @click="getPieData(position.id)">查看统计数据
+            </button>
+            <div class="col-md-2"></div>
+            <button class="btn btn-warning col-md-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop0"
                     v-on:click="getPosition(position.id)">修改
             </button>
-            <div class="col-md-4"></div>
-            <button class="btn btn-danger col-md-3" v-on:click="deletePosition(position.id)">删除</button>
+            <div class="col-md-1"></div>
+            <button class="btn btn-danger col-md-2" v-on:click="deletePosition(position.id)">删除</button>
           </div>
         </div>
       </div>
@@ -62,7 +66,9 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-on:click="updatePosition(positionForm.id)">保存</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    v-on:click="updatePosition(positionForm.id)">保存
+            </button>
           </div>
         </div>
       </div>
@@ -113,13 +119,36 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="staticBackdrop4" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">统计信息</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <pie-chart v-bind:datas="this.pie"></pie-chart>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import PieChart from "@/components/PieChart";
 
 export default {
   name: "PositionManage",
+  components: {
+    PieChart
+
+  },
   data() {
     return {
       positions: [],
@@ -136,7 +165,8 @@ export default {
       searchForm: {
         name: '',
         location: ''
-      }
+      },
+      pie: [{name:'null',value:100}]
     }
   },
   methods: {
@@ -184,7 +214,7 @@ export default {
         this.positionForm.errors++;
       }
       if (this.positionForm.errors > 0) {
-        this.positionForm.errors =0;
+        this.positionForm.errors = 0;
         return;
       }
 
@@ -244,7 +274,7 @@ export default {
         this.positionForm.errors++;
       }
       if (this.positionForm.errors > 0) {
-        this.positionForm.errors =0;
+        this.positionForm.errors = 0;
         return;
       }
 
@@ -263,6 +293,23 @@ export default {
           .catch((error) => {
             this.$toasted.error('保存失败')
             console.log(error);
+          })
+    },
+    getPieData(position_id) {
+      const path = '/count/position/' + position_id;
+      this.$axios.get(path)
+          .then((response) => {
+            let pie = [];
+            if(response.data['-1']) pie.push({name: '流程终止', value: response.data['-1']});
+            if(response.data['0']) pie.push({name: '待审', value: response.data['0']});
+            if(response.data['1']) pie.push({name: '初审', value: response.data['1']});
+            if(response.data['2']) pie.push({name: '一面', value: response.data['2']});
+            if(response.data['3']) pie.push({name: '二面', value: response.data['3']});
+            if(response.data['4']) pie.push({name: '入职', value: response.data['4']});
+            this.pie = pie;
+          })
+          .catch((error) => {
+            console.log(error)
           })
     }
   },

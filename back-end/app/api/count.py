@@ -19,7 +19,7 @@ def count_position(id):
         return bad_request('没有该权限')
     position = Position.query.get_or_404(id)
     count = db.session.execute(
-        "select status,count(*) from (select * from apply where position_id = 1) as a group by status".format(id))
+        "select status,count(*) from (select * from apply where position_id = {}) as a group by status".format(id))
     data = {}
     for status in [0, 1, 2, 3, 4, -1]:
         data[status] = 0
