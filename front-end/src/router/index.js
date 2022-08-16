@@ -14,44 +14,68 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'test',
-        component: TestWord
+        name: 'home',
+        component: TestWord,
+        meta:{
+            title:'首页'
+        }
     },
     {
         path: '/register',
         name: 'register',
-        component: RegisterPage
+        component: RegisterPage,
+        meta:{
+            title:'注册'
+        }
     },
     {
         path: '/login',
         name: 'login',
-        component: LoginPage
+        component: LoginPage,
+        meta:{
+            title:'登录'
+        }
     },
 
     {
         path: '/recruitment/:position_id',
         name: 'positionDetail',
-        component: positionDetail
+        component: positionDetail,
+        meta:{
+            title:'岗位详情'
+        }
     },
     {
         path: '/recruitment',
         name: 'recruitment',
-        component: PositionsPage
+        component: PositionsPage,
+        meta:{
+            title:'岗位信息'
+        }
     },
     {
         path: '/userinfo/:user_id',
         name: 'userinfo',
-        component: UserInfo
+        component: UserInfo,
+        meta:{
+            title:'个人资料'
+        }
     },
     {
         path: '/my_recruitment/:user_id',
         name: 'my_recruitment',
-        component: RecruitInfo
+        component: RecruitInfo,
+        meta:{
+            title:'应聘记录'
+        }
     },
     {
         path: '/manage/:user_id',
         name: 'manage',
-        component: ManagePage
+        component: ManagePage,
+        meta:{
+            title:'管理页面'
+        }
     }
 ]
 
@@ -63,6 +87,9 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const token = window.localStorage.getItem('recsys-user-token')
+    if(to.meta.title){
+        document.title = to.meta.title
+    }
     if (to.matched.some(record => record.meta.requiresAuth) && (!token)) {
         next({
             path: '/login',

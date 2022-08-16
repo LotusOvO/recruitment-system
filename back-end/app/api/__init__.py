@@ -9,4 +9,4 @@ from app.api import \
     test, auth, base_info, \
     errors, tokens, users, \
     edu_info, work_info, fam_info, \
-    recruitment, recruit
+    recruitment, recruit, count
