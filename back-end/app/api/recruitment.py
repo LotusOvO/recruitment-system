@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.getcwd())
 from flask import request, jsonify, url_for, g, current_app
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 from app.api import bp
 from app.api.auth import token_auth, verify_admin
 from app.api.errors import bad_request, error_response
@@ -13,6 +13,18 @@ from app import db
 @bp.route('recruitment', methods=['GET'])
 def get_recruitments():
     return jsonify([position.to_dict() for position in Position.query])
+
+
+@bp.route('recruitment/department', methods=['GET'])
+def get_recruitments_by_department():
+    data = {}
+    departments = db.session.query(Position.department).group_by(Position.department)
+    for dp in departments.all():
+        dp = dp[0]
+        data[dp] = []
+        for item in Position.query.filter(Position.department == dp).all():
+            data[dp].append(item.to_dict())
+    return jsonify(data)
 
 
 @bp.route('recruitment/<int:id>', methods=['GET'])

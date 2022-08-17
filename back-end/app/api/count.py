@@ -73,3 +73,24 @@ def count_status(status):
     else:
         data[status] = 0
     return jsonify(data)
+
+
+@bp.route('/count/status', methods=['GET'])
+@token_auth.login_required
+def count_all_status():
+    # 验证是否为管理员
+    if not verify_admin():
+        return bad_request('没有该权限')
+    count = db.session.execute(
+        "select status,count(*) from apply group by status")
+    data = {
+        '0': 0,
+        '1': 0,
+        '2': 0,
+        '3': 0,
+        '4': 0,
+        '-1': 0
+    }
+    for item in count.all():
+        data[str(item[0])] = item[1]
+    return jsonify(data)
