@@ -2,7 +2,7 @@
   <nav class="navbar navbar-light container">
     <div class="container-fluid">
       <router-link to="/" class="navbar-brand">首页</router-link>
-      <router-link to="/recruitment" class="navbar-item">岗位</router-link>
+      <router-link to="/recruitment" class="navbar-brand">岗位</router-link>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="搜索热门岗位" aria-label="Search" v-model="searchText">
         <router-link class="btn btn-outline-success text-nowrap" type="submit" :to="{path:'/recruitment', query:{name : searchText}}">搜索</router-link>

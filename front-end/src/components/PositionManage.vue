@@ -7,8 +7,12 @@
       <input v-model="searchForm.location" class="col-md-3 col-form-control" id="location" type="text"
              placeholder="工作地点">
       <div class="col-md-1"></div>
-      <button class="btn col-md-2 btn-primary" type="submit">搜索</button>
+      <button class="btn col-md-2 btn-outline-primary" type="submit">搜索</button>
     </form>
+    <button type="button" class="btn btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+            style="margin-top: 15px;" v-on:click="clearForm">
+      新增岗位
+    </button>
     <div v-for="position in positions" v-bind:key="position.id">
       <br>
       <div class="card card2 container">
@@ -74,10 +78,6 @@
       </div>
     </div>
 
-    <button type="button" class="btn btn-primary add-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-            style="margin-top: 15px;" v-on:click="clearForm">
-      新增岗位
-    </button>
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">

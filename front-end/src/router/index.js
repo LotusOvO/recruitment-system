@@ -87,6 +87,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const token = window.localStorage.getItem('recsys-user-token')
+    document.querySelector('body').setAttribute('style', 'background-color: #f9f9f9');
     if(to.meta.title){
         document.title = to.meta.title
     }

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-for="item in positions" :key="item.id">
+  <div class="row" style="width: 70%;margin: auto">
+    <div v-for="item in positions" :key="item.id" class="col-lg-6">
       <br>
       <div class="card position_card container">
         <div class="card-body">
@@ -68,7 +68,7 @@ export default {
 
 <style scoped>
 .position_card {
-  width: 50%;
+  /*width: 50%;*/
   border-radius: 10px;
 }
 </style>

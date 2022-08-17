@@ -8,7 +8,7 @@
       <input v-model="searchForm.position_name" class="col-md-3 col-form-control" id="position_name" type="text"
              placeholder="岗位名称">
       <div class="col-md-1"></div>
-      <button class="btn col-md-2 btn-primary" type="submit">搜索</button>
+      <button class="btn col-md-2 btn-outline-primary" type="submit">搜索</button>
     </form>
     <div v-for="(item,index) in relations" v-bind:key="index">
       <div class="card container card2">
