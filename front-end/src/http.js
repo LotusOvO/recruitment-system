@@ -5,6 +5,7 @@ import store from '@/store'
 
 axios.defaults.timeout = 5000;
 axios.defaults.baseURL = 'http://127.0.0.1:5000/api'
+// axios.defaults.baseURL = 'http://1.14.130.92:5000/api'
 
 axios.interceptors.request.use(function (config) {
     const token = window.localStorage.getItem('recsys-user-token')
