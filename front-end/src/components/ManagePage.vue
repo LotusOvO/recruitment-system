@@ -23,7 +23,7 @@
           <RecruitManage></RecruitManage>
         </div>
         <div class="tab-pane fade" id="v-pills-data" role="tabpanel" aria-labelledby="v-pills-data-tab">
-          <DataPage @searchName="fun"></DataPage>
+          <DataPage @searchName="name" @searchLocation="location" @searchDepartment="department"></DataPage>
         </div>
       </div>
 
@@ -39,9 +39,25 @@ export default {
   name: "ManagePage",
   components: {RecruitManage, PositionManage, DataPage},
   methods:{
-    fun(name){
+    name(name){
       this.$refs.pmPage.searchPosition(name);
       this.$refs.pmPage.searchForm.name = name;
+      this.$refs.pmPage.searchForm.location = '';
+      this.$refs.pmPage.searchForm.department = '';
+      this.$refs.pmButton.click();
+    },
+    location(location){
+      this.$refs.pmPage.searchPosition('',location);
+      this.$refs.pmPage.searchForm.name = '';
+      this.$refs.pmPage.searchForm.location = location;
+      this.$refs.pmPage.searchForm.department = '';
+      this.$refs.pmButton.click();
+    },
+    department(department){
+      this.$refs.pmPage.searchPosition('','',department);
+      this.$refs.pmPage.searchForm.name = '';
+      this.$refs.pmPage.searchForm.location = '';
+      this.$refs.pmPage.searchForm.department = department;
       this.$refs.pmButton.click();
     }
   }

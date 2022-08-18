@@ -54,7 +54,7 @@ export default {
           })
     },
     testFunc() {
-      const path = '/count/status'
+      const path = '/count/department/10'
       this.$axios.get(path)
           .then((response) => {
             console.log(response)

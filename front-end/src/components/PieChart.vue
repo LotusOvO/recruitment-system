@@ -15,6 +15,13 @@ export default {
       myChart:null,
     }
   },
+  // computed:{
+  //   sum : ()=>{
+  //
+  //     console.log(this.datas)
+  //     return 0;
+  //   }
+  // },
   // mounted() {
   //   this.$nextTick(()=>{
   //     this.getPie();
@@ -32,7 +39,17 @@ export default {
         this.myChart.dispose();
       }
       this.myChart = echarts.init(document.getElementById('myChart'))
+      let sum = 0;
+      for(let item in this.datas){
+        sum += this.datas[item].value;
+      }
       let option = {
+        title: {
+          zlevel: 0,
+          x: 'center',
+          y: 'center',
+          text : "总" + sum + "人"
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a}<br/>{b}:{c} ({d}%)'

@@ -1,10 +1,13 @@
 <template>
   <div>
-    <form class="row" @submit.prevent="searchPosition(searchForm.name,searchForm.location)">
+    <form class="row" @submit.prevent="searchPosition(searchForm.name,searchForm.location,searchForm.department)" style="margin-right: 0">
       <div class="col-md-1"></div>
-      <input v-model="searchForm.name" class="col-md-3 col-form-control" id="name" type="text" placeholder="岗位名称">
+      <input v-model="searchForm.name" class="col-md-2 col-form-control" id="name" type="text" placeholder="岗位名称">
       <div class="col-md-1"></div>
-      <input v-model="searchForm.location" class="col-md-3 col-form-control" id="location" type="text"
+      <input v-model="searchForm.department" class="col-md-2 col-form-control" id="department" type="text"
+             placeholder="工作部门">
+      <div class="col-md-1"></div>
+      <input v-model="searchForm.location" class="col-md-2 col-form-control" id="location" type="text"
              placeholder="工作地点">
       <div class="col-md-1"></div>
       <button class="btn col-md-2 btn-outline-primary" type="submit">搜索</button>
@@ -164,24 +167,26 @@ export default {
       },
       searchForm: {
         name: '',
-        location: ''
+        location: '',
+        department: ''
       },
       pie: [{name:'null',value:100}]
     }
   },
   methods: {
-    searchPosition(name = '', location = '') {
+    searchPosition(name = '', location = '', department = '') {
       let path = '/recruitment/search'
-      if (name !== '' && location !== '') {
-        path += '?name=' + name + '&location=' + location;
-      } else {
-        if (location !== '') {
-          path += '?location=' + location;
-        }
-        if (name !== '') {
-          path += '?name=' + name;
-        }
-      }
+      // if (name !== '' && location !== '' && department!=='') {
+      //   path += '?name=' + name + '&location=' + location + '&department=' + department;
+      // } else {
+      //   if (location !== '') {
+      //     path += '?location=' + location;
+      //   }
+      //   if (name !== '') {
+      //     path += '?name=' + name;
+      //   }
+      // }
+      path += '?name=' + name + '&location=' + location + '&department=' + department;
       this.$axios.get(path)
           .then((response) => {
             this.positions = response.data

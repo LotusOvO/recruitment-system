@@ -107,8 +107,11 @@ def delete_recruitment(id):
 @bp.route('recruitment/search', methods=['GET'])
 def search_recruitment():
     name = request.args.get('name', "")
+    department = request.args.get('department', "")
     location = request.args.get('location', "")
     positions = Position.query.filter(
-        and_(Position.name.like('%{}%'.format(name)), Position.location.like('%{}%'.format(location)))).all()
+        and_(Position.name.like('%{}%'.format(name)),
+             Position.location.like('%{}%'.format(location)),
+             Position.department.like('%{}%'.format(department)))).all()
 
     return jsonify([position.to_dict() for position in positions])

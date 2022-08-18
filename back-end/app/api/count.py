@@ -94,3 +94,55 @@ def count_all_status():
     for item in count.all():
         data[str(item[0])] = item[1]
     return jsonify(data)
+
+
+@bp.route('/count/department/<int:sum>', methods=['GET'])
+@token_auth.login_required
+def count_department(sum):
+    # 验证是否为管理员
+    if not verify_admin():
+        return bad_request('没有该权限')
+    if sum <= 0:
+        sum = 1
+    if sum > 20:
+        sum = 20
+    count = db.session.execute(
+        "select department,count(*) as c from "
+        "(select department,user_id from apply,positions where apply.position_id = positions.id) as a "
+        "group by department order by c desc limit {}".format(sum)
+    )
+    data = {}
+    i = 1
+    for item in count.all():
+        data[i] = {
+            "department": item[0],
+            "number": item[1]
+        }
+        i += 1
+    return jsonify(data)
+
+
+@bp.route('/count/location/<int:sum>', methods=['GET'])
+@token_auth.login_required
+def count_location(sum):
+    # 验证是否为管理员
+    if not verify_admin():
+        return bad_request('没有该权限')
+    if sum <= 0:
+        sum = 1
+    if sum > 20:
+        sum = 20
+    count = db.session.execute(
+        "select location,count(*) as c from "
+        "(select location,user_id from apply,positions where apply.position_id = positions.id) as a "
+        "group by location order by c desc limit {}".format(sum)
+    )
+    data = {}
+    i = 1
+    for item in count.all():
+        data[i] = {
+            "location": item[0],
+            "number": item[1]
+        }
+        i += 1
+    return jsonify(data)
