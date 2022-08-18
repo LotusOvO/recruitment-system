@@ -13,13 +13,26 @@
     <div v-for="(item,index) in relations" v-bind:key="index">
       <div class="card container card2">
         <div class="card-body">
-          <p class="card-text">应聘人:{{ item.user.name }}</p>
-          <p class="card-text">职位:{{ item.position.name }}</p>
-          <p class="card-text">部门:{{ item.position.department }}</p>
-          <p class="card-text">地点:{{ item.position.location }}</p>
-          <p class="card-text">进度:{{ status[item.position.status] }}</p>
+          <p class="card-text">应聘人: {{ item.user.name }}</p>
+          <p class="card-text">职位: {{ item.position.name }}</p>
+          <p class="card-text">部门: {{ item.position.department }}</p>
+          <p class="card-text">地点: {{ item.position.location }}</p>
+          <p class="card-text">当前进度: {{ status[item.position.status] }}</p>
+          <div class="progress col-12">
+            <div class="progress-bar progress-bar-striped" role="progressbar" :class="statusClass[item.position.status]"></div>
+          </div>
+          <div class="col-12 row">
+            <div class="col-sm-1"></div>
+            <p class="col-sm-2">待审</p>
+            <p class="col-sm-2">初审</p>
+            <p class="col-sm-2">一面</p>
+            <p class="col-sm-2">二面</p>
+            <div class="col-sm-1"></div>
+            <p class="col-sm-2" v-show="item.position.status !== 4">流程终止</p>
+            <p class="col-sm-2" v-show="item.position.status === 4">入职</p>
+          </div>
         </div>
-        <div class="card-footer row">
+        <div class="card-footer row" style=";margin-bottom: 5px">
           <button class="btn btn-primary col-md-4" data-bs-toggle="modal" data-bs-target="#staticBackdrop3"
                   v-on:click="getInformation(item.user.id)">查看应聘人资料
           </button>
@@ -104,6 +117,14 @@ export default {
         3: '二面',
         4: '入职',
         '-1': '流程终止'
+      },
+      statusClass:{
+        0: 'statusZero',
+        1: 'statusOne',
+        2: 'statusTwo',
+        3: 'statusThree',
+        4: 'statusFour',
+        '-1': 'refuse'
       },
       information: {
         base_info: {},
@@ -190,5 +211,29 @@ export default {
 
 .block {
   margin-top: 15px;
+}
+
+.refuse {
+  width: 100%;
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-danger-rgb),var(--bs-bg-opacity))!important;
+}
+
+.statusZero{
+  width: 20%;
+}
+.statusOne{
+  width: 40%;
+}
+.statusTwo{
+  width: 60%;
+}
+.statusThree{
+  width: 80%;
+}
+.statusFour{
+  width: 100%;
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-success-rgb),var(--bs-bg-opacity))!important;
 }
 </style>
