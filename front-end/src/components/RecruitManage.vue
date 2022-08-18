@@ -22,14 +22,14 @@
             <div class="progress-bar progress-bar-striped" role="progressbar" :class="statusClass[item.position.status]"></div>
           </div>
           <div class="col-12 row">
-            <div class="col-sm-1"></div>
-            <p class="col-sm-2">待审</p>
-            <p class="col-sm-2">初审</p>
-            <p class="col-sm-2">一面</p>
-            <p class="col-sm-2">二面</p>
-            <div class="col-sm-1"></div>
-            <p class="col-sm-2" v-show="item.position.status !== 4">流程终止</p>
-            <p class="col-sm-2" v-show="item.position.status === 4">入职</p>
+            <div class="col-1"></div>
+            <p class="col-2">待审</p>
+            <p class="col-2">初审</p>
+            <p class="col-2">一面</p>
+            <p class="col-2">二面</p>
+            <div class="col-1"></div>
+            <p class="col-2" v-show="item.position.status !== 4">流程终止</p>
+            <p class="col-2" v-show="item.position.status === 4">入职</p>
           </div>
         </div>
         <div class="card-footer row" style=";margin-bottom: 5px">
