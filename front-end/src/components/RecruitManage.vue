@@ -28,8 +28,8 @@
             <p class="col-2">一面</p>
             <p class="col-2">二面</p>
             <div class="col-1"></div>
-            <p class="col-2" v-show="item.position.status !== 4">流程终止</p>
-            <p class="col-2" v-show="item.position.status === 4">入职</p>
+            <p class="col-2" v-show="item.position.status === -1">流程终止</p>
+            <p class="col-2" v-show="item.position.status !== -1">入职</p>
           </div>
         </div>
         <div class="card-footer row" style=";margin-bottom: 5px">

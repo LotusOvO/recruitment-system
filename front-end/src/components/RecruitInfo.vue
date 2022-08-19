@@ -11,7 +11,8 @@
             <div class="progress-bar progress-bar-striped" role="progressbar" :class="statusClass[item.status]"></div>
           </div>
           <div class="col-12 row">
-            <div class="col-2"></div>
+            <div class="col-1"></div>
+            <div class="col-1" v-if="width >= 570"></div>
             <p class="col-1">待审</p>
             <div class="col-1"></div>
             <p class="col-1">初审</p>
@@ -20,8 +21,6 @@
             <div class="col-1"></div>
             <p class="col-1">二面</p>
             <div class="col-1"></div>
-            <p class="col-1" v-show="item.status !== 4">流程终止</p>
-            <p class="col-1" v-show="item.status === 4">入职</p>
           </div>
           <button class="btn btn-primary" v-on:click="deleteRecruitment(item.id)">取消应聘</button>
         </div>
@@ -52,6 +51,7 @@ export default {
         4: 'statusFour',
         '-1': 'refuse'
       },
+      width:document.documentElement.clientWidth
     }
   },
   methods: {

@@ -165,3 +165,40 @@ def search_recruit():
             result.append(data)
 
     return jsonify(result)
+
+
+@bp.route('/recruit/status', methods=['GET'])
+@token_auth.login_required
+def search_recruit_by_id_and_status():
+    # 验证是否为管理员
+    if not verify_admin():
+        return bad_request('没有该权限')
+    position_id = request.args.get('position_id', '')
+    status = request.args.get('status', '')
+    if position_id == '' and status == '':
+        result = db.session.execute(
+            "select * from apply"
+        )
+    elif position_id != '' and status == '':
+        result = db.session.execute(
+            "select * from apply where position_id={}".format(position_id)
+        )
+    elif status != '' and position_id == '':
+        result = db.session.execute(
+            "select * from apply where status={}".format(status)
+        )
+    else:
+        result = db.session.execute(
+            "select * from apply where position_id={} and status={}".format(position_id, status)
+        )
+    data = []
+    for item in result.all():
+        user = User.query.get_or_404(item[0])
+        position = Position.query.get_or_404(item[1])
+        position_data = position.to_dict(user=user)  # type: dict
+        user_data = user.user_info.to_dict(detail=False)
+        data.append({
+            'position': position_data,
+            'user': user_data
+        })
+    return jsonify(data)
